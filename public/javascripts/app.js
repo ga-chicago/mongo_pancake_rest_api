@@ -1,47 +1,79 @@
-var app = app || {};       // definitions (blueprints) here
-var active = active || {}; // instantiated objects go here
+// namespace
+var app = app || {};
+var active = active || {};
 
 app.Model = Backbone.Model.extend({
-  //idAttribute: '_id',
-  // http://stackoverflow.com/questions/8007218/backbone-using-a-different-field-name-for-id
+});
+
+// define my 4 important parts!
+app.Collection = Backbone.Collection.extend({
+  model: app.Model, // what type of models will this collection hold?
+  url: '/api',
   initialize: function() {
-    console.log('A model was dynamically generated');
+    var self = this;
+    this.on('change', function() {
+      console.log('Our Collection changed.');
+      var view = new app.CollectionView({
+        collection: self
+      });
+    });
+    this.on('sync', function() {
+      console.log('Our Collection synced with the API.');
+      var view = new app.CollectionView({
+        collection: self
+      });
+    });
+    // get data from the API
+    this.fetch();
   }
 });
 
-// mongodb support
-// override the model's idAttribute to '_id'
 Backbone.Model.idAttribute = "_id";
 
-app.Collection = Backbone.Collection.extend({
-  model: app.Model,
+app.CollectionView = Backbone.View.extend({
+  el: $('#pancake-listing'),
   initialize: function() {
-    console.log('The collection of pancakes is on the loose');
-  },
-  url: '/api'
-});
-
-app.CollectionView = Backbone.View.extend();
-
-app.ModelView = Backbone.View.extend({
-  initialize: function() {
-    console.log('A modelView was dynamically generated');
+    console.log('CollectionView is a go.');
+    // when loaded, let us render immediately
     this.render();
   },
   render: function() {
-    // use our model's attrs
-    var data = this.model.attributes;
-    // get the text of a template
-    var template = $('#recipe-template').html();
-    // underscore transforms my template into a method
-    // this method accepts data as an argument to render it
-    var compileTpl = _.template(template);
-    var html = compileTpl(data);
-    console.log(html);
+    console.log('CollectionView is rendering.');
+    // we expect our CollectionView to be bound to a Collection
+    var models = this.collection.models;
+    for (var m in models) {
+      new app.ModelView({
+        model: models[m],
+        el: this.el
+      });
+    }
   }
 });
 
-$(document).ready(function() {
-  // when the page loads...
-  console.log('here we go! pancakes, pancakes everywhere!');
+app.ModelView = Backbone.View.extend({
+  initialize: function() {
+    console.log('ModelView instantiated and awaiting orders, sir');
+    this.render();
+  },
+  render: function() {
+    console.log('ModelView rendering.');
+    var data = this.model.attributes;
+    console.log('Grabbing template...');
+    var template = $('#recipe-template').html();
+    console.log('Transforming template...');
+    var compileTpl = _.template(template);
+    console.log('Creating HTML from template and model data...');
+    var html = compileTpl(data);
+    console.log('Rendering to page...');
+    this.$el.append(html);
+    // vanilla - this.el.innerHTML = this.el.innerHTML + html;
+  }
+});
+
+// mongoDB support!
+Backbone.Model.idAttribute = "_id";
+
+// the document is ready
+$(document).ready(function(){
+  active.collection = new app.Collection();
 });
