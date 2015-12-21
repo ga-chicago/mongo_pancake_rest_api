@@ -1,9 +1,8 @@
 var app = app || {};       // definitions (blueprints) here
 var active = active || {}; // instantiated objects go here
 
-
 app.Model = Backbone.Model.extend({
-  idAttribute: '_id',
+  //idAttribute: '_id',
   // http://stackoverflow.com/questions/8007218/backbone-using-a-different-field-name-for-id
   initialize: function() {
     console.log('A model was dynamically generated');
@@ -31,7 +30,7 @@ app.ModelView = Backbone.View.extend({
   },
   render: function() {
     // use our model's attrs
-    var data = this.attributes;
+    var data = this.model.attributes;
     // get the text of a template
     var template = $('#recipe-template').html();
     // underscore transforms my template into a method
