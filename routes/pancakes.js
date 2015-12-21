@@ -52,7 +52,7 @@ router.put('/:id', function(req, res, next) {
     if (err) {
       res.json(buildErrorResponse(err));
     } else {
-      res.json(addMessageToSuccessfulQuery(pancake, 'Your recipe was updated.'));
+      res.json(pancake);
     }
   });
 });
@@ -62,7 +62,7 @@ router.patch('/:id', function(req, res, next) {
     if (err) {
       res.json(buildErrorResponse(err));
     } else {
-      res.json(addMessageToSuccessfulQuery(pancake, 'Your recipe was updated.'));
+      res.json(pancake);
     }
   });
 });
@@ -73,7 +73,7 @@ router.delete('/:id', function(req, res, next) {
     if (err) {
       res.json(buildErrorResponse(err));
     } else {
-      res.json(addMessageToSuccessfulQuery(pancake, 'Your recipe was removed.'));
+      res.json(pancake);
     }
   });
 });
