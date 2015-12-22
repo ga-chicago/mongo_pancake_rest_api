@@ -4,8 +4,20 @@
   <em>Current Version:</em> {{version}}
 </p>
 
+<h2>Add Recipe</h2>
+<section id='add-recipe'>
+  <input type="text" id='p-ingredients' value="" placeholder='List of ingredients'>
+  <input type="text" id='p-type' value="" placeholder='Type of pancake'>
+  <input type="text" id='p-topping' value="" placeholder='Topping?'>
+  <input type="text" id='p-syrup' value="" placeholder='Syrup?'>
+  <input type="text" id='p-instructions' value="" placeholder='Instructions'>
+  <input type="text" id='p-time' value="" placeholder='Cook time'>
+  <button type="button" id='p-create-btn'>Add Recipe</button>
+  <div class='error'></div>
+</section>
+
+<h2>Pancakes Listing</h2>
 <section id='pancake-listing'>
-  <h2>Pancakes Listing</h2>
 </section>
 
 <!-- defining an underscore.js template -->
@@ -22,3 +34,4 @@
 
 <!-- loading custom app -->
 <script src='/javascripts/app.js'></script>
+<script src='/javascripts/app.views.js'></script>
