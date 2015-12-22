@@ -5,11 +5,28 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 require('./db/database');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var routes = require('./routes/index');
 var pancakes = require('./routes/pancakes');
+var accounts = require('./routes/account');
+
+var apiKeyValidator = require('./helpers/keyValidator');
+var apiKeyGenerator = require('./helpers/keyGenerator');
+var newKey = apiKeyGenerator();
+console.log(apiKeyValidator(newKey));
 
 var app = express();
+
+app.use(require('express-session')({
+    secret: 'roger panella unicorn man',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api', pancakes);
+app.use('/account', accounts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
